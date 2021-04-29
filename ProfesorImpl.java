@@ -24,8 +24,12 @@ public class ProfesorImpl implements OOP.Provided.Profesor {
         return id;
     }
 
-    public OOP.Provided.Profesor favorite(CasaDeBurrito c) {
-
+    public OOP.Provided.Profesor favorite(CasaDeBurrito c) throws UnratedFavoriteCasaDeBurritoException {
+        if(!(c.isRatedBy(this))){
+            throw new UnratedFavoriteCasaDeBurritoException();
+        }
+            favourites.add(c);
+            return this;
     }
 
 
@@ -76,6 +80,39 @@ public class ProfesorImpl implements OOP.Provided.Profesor {
         List<CasaDeBurrito> sortedList = new ArrayList<>(favourites);
         Collections.sort(sortedList, comp);
         return sortedList;
+    }
+
+
+/** Both favourites by-X  methods are sorted using  filter and sort method above**/
+
+
+   public Collection<CasaDeBurrito> favoritesByRating(int rLimit){
+        Comparator<CasaDeBurrito> comp_rate_dist_id =
+                //TODO finish comparator and send it + predicate to filterandSortFavourites
+    }
+
+    public Collection<CasaDeBurrito> favoritesByDist(int dLimit){
+
+    }
+
+    @Override
+    public boolean equals(Object o){
+        if(o == this){
+            return true;
+        }
+
+        if(!(o instanceof  Profesor)){
+            return false;
+        }
+
+        Profesor p = (Profesor) o;
+        return (this.id == p.getId());
+    }
+
+
+    @Override
+    public int compareTo(Profesor p){
+        return (this.id - p.getId());
     }
 
 }
