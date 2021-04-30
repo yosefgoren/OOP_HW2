@@ -10,11 +10,11 @@ import OOP.Provided.*;
 public class ProfesorImpl implements OOP.Provided.Profesor {
     int id;
     String name;
-    Collection<CasaDeBurrito> favourites;
+    Collection<CasaDeBurritoimpl> favourites;
     Set<Profesor> friends;
 
     public ProfesorImpl(int id, String name) {
-        favourites = new HashSet<CasaDeBurrito>();
+        favourites = new HashSet<CasaDeBurritoimpl>();
         friends = new HashSet<Profesor>();
         this.id = id;
         this.name = name;
@@ -24,7 +24,7 @@ public class ProfesorImpl implements OOP.Provided.Profesor {
         return id;
     }
 
-    public OOP.Provided.Profesor favorite(CasaDeBurrito c) throws UnratedFavoriteCasaDeBurritoException {
+    public OOP.Provided.Profesor favorite(CasaDeBurritoimpl c) throws UnratedFavoriteCasaDeBurritoException {
         if(!(c.isRatedBy(this))){
             throw new UnratedFavoriteCasaDeBurritoException();
         }
@@ -66,10 +66,10 @@ public class ProfesorImpl implements OOP.Provided.Profesor {
 
     }
 
-    public Collection<CasaDeBurrito> filterAndSortFavorites(Comparator<CasaDeBurrito> comp, Predicate<CasaDeBurrito> p) {
-        Iterator<CasaDeBurrito> it = favourites.iterator();
+    public Collection<CasaDeBurritoimpl> filterAndSortFavorites(Comparator<CasaDeBurritoimpl> comp, Predicate<CasaDeBurritoimpl> p) {
+        Iterator<CasaDeBurritoimpl> it = favourites.iterator();
         while (it.hasNext()) {
-            CasaDeBurrito casa = it.next();
+            CasaDeBurritoimpl casa = it.next();
             if (p.test(casa) == false) {
                 favourites.remove(casa);
 
@@ -77,7 +77,7 @@ public class ProfesorImpl implements OOP.Provided.Profesor {
 
 
         }
-        List<CasaDeBurrito> sortedList = new ArrayList<>(favourites);
+        List<CasaDeBurritoimpl> sortedList = new ArrayList<>(favourites);
         Collections.sort(sortedList, comp);
         return sortedList;
     }
@@ -86,12 +86,12 @@ public class ProfesorImpl implements OOP.Provided.Profesor {
 /** Both favourites by-X  methods are sorted using  filter and sort method above**/
 
 
-   public Collection<CasaDeBurrito> favoritesByRating(int rLimit){
-        Comparator<CasaDeBurrito> comp_rate_dist_id =
+   public Collection<CasaDeBurritoimpl> favoritesByRating(int rLimit){
+        Comparator<CasaDeBurritoimpl> comp_rate_dist_id =
                 //TODO finish comparator and send it + predicate to filterandSortFavourites
     }
 
-    public Collection<CasaDeBurrito> favoritesByDist(int dLimit){
+    public Collection<CasaDeBurritoimpl> favoritesByDist(int dLimit){
 
     }
 
