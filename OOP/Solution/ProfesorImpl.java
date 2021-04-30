@@ -1,5 +1,5 @@
 
-
+package OOP.Solution;
 
 import java.util.*;
 import java.util.function.Predicate;
@@ -33,8 +33,8 @@ public class ProfesorImpl implements OOP.Provided.Profesor {
     }
 
 
-    public Collection<OOP.Provided.CasaDeBurrito> favorites() {
-        return favourites;
+    public Collection<CasaDeBurrito> favorites() {
+        return favourites; //TODO Clone
     }
 
     public OOP.Provided.Profesor addFriend(OOP.Provided.Profesor p)
@@ -50,23 +50,27 @@ public class ProfesorImpl implements OOP.Provided.Profesor {
     }
 
     public Set<Profesor> getFriends() {
-        return friends;
+        Set<Profesor>  friendsTemp = (Set<Profesor>)(ProfesorImpl)friends.clone() ;
+        return friendsTemp; //TODO clone
     }
 
+
     public Set<Profesor> filteredFriends(Predicate<Profesor> p) {
-        Iterator<Profesor> it = friends.iterator();
+        Set<Profesor>  friendsTemp = new HashSet<>(friends);
+        Iterator<Profesor> it = friendsTemp.iterator();
         while (it.hasNext()) {
             Profesor prof = it.next();
             if (p.test(prof) == false) {
-                friends.remove(prof);
+                friendsTemp.remove(prof);
 
             }
         }
-        return friends;
+        return friendsTemp;
 
     }
 
     public Collection<CasaDeBurrito> filterAndSortFavorites(Comparator<CasaDeBurrito> comp, Predicate<CasaDeBurrito> p) {
+        Set<Profesor>  friendsTemp = new HashSet<>(friends);
         Iterator<CasaDeBurrito> it = favourites.iterator();
         while (it.hasNext()) {
             CasaDeBurrito casa = it.next();
@@ -87,19 +91,23 @@ public class ProfesorImpl implements OOP.Provided.Profesor {
 
 
    public Collection<CasaDeBurrito> favoritesByRating(int rLimit){
-        Comparator<CasaDeBurrito> comp_rate_dist_id =
-                //TODO finish comparator and send it + predicate to filterandSortFavourites
+        Comparator<CasaDeBurrito> comp_rate_dist_id = Comparator.comparing(CasaDeBurrito::getRatingOf)
+                .reversed().thenComparing(CasaDeBurrito::distance).thenComparing(CasaDeBurrito::getId);
+
+
+        return filterAndSortFavorites(comp_rate_dist_id,(c)->c.averageRating()>=rLimit);
     }
 
     public Collection<CasaDeBurrito> favoritesByDist(int dLimit){
+        Comparator<CasaDeBurrito> comp_dist_rate_id = Comparator.comparing(CasaDeBurrito::distance)
+                .thenComparing(CasaDeBurrito::getRatingOf).reversed().thenComparing(CasaDeBurrito::getId);
 
+
+        return filterAndSortFavorites(comp_dist_rate_id,(c)->c.distance()<=dLimit);
     }
 
     @Override
     public boolean equals(Object o){
-        if(o == this){
-            return true;
-        }
 
         if(!(o instanceof  Profesor)){
             return false;
@@ -113,6 +121,11 @@ public class ProfesorImpl implements OOP.Provided.Profesor {
     @Override
     public int compareTo(Profesor p){
         return (this.id - p.getId());
+    }
+
+    @Override
+    public Object clone() throws CloneNotSupportedException{
+
     }
 
 }
