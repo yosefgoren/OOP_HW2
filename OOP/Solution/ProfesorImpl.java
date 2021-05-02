@@ -45,7 +45,7 @@ public class ProfesorImpl implements OOP.Provided.Profesor {
 
         if (this.equals(p)) throw new SameProfesorException();
 
-        friends.add(p)
+        friends.add(p);
 
         return this;
     }
