@@ -34,7 +34,8 @@ public class ProfesorImpl implements OOP.Provided.Profesor {
 
 
     public Collection<CasaDeBurrito> favorites() {
-        return favourites; //TODO Clone
+    Set<CasaDeBurrito> temp = new HashSet<>(favourites);
+        return temp; //TODO Clone
     }
 
     public OOP.Provided.Profesor addFriend(OOP.Provided.Profesor p)
@@ -44,14 +45,14 @@ public class ProfesorImpl implements OOP.Provided.Profesor {
 
         if (this.equals(p)) throw new SameProfesorException();
 
-        friends.add(p);
+        friends.add(p)
 
         return this;
     }
 
     public Set<Profesor> getFriends() {
-        Set<Profesor>  friendsTemp = (Set<Profesor>)(ProfesorImpl)friends.clone() ;
-        return friendsTemp; //TODO clone
+        Set<Profesor>  temp= new HashSet<>(friends);
+        return temp; //TODO clone
     }
 
 
@@ -123,9 +124,6 @@ public class ProfesorImpl implements OOP.Provided.Profesor {
         return (this.id - p.getId());
     }
 
-    @Override
-    public Object clone() throws CloneNotSupportedException{
 
-    }
 
 }
