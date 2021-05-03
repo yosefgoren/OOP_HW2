@@ -25,16 +25,16 @@ public class ProfesorImpl implements OOP.Provided.Profesor {
     }
 
     public OOP.Provided.Profesor favorite(CasaDeBurrito c) throws UnratedFavoriteCasaDeBurritoException {
-        if(!(c.isRatedBy(this))){
+        if (!(c.isRatedBy(this))) {
             throw new UnratedFavoriteCasaDeBurritoException();
         }
-            favourites.add(c);
-            return this;
+        favourites.add(c);
+        return this;
     }
 
 
     public Collection<CasaDeBurrito> favorites() {
-    Set<CasaDeBurrito> temp = new HashSet<>(favourites);
+        Set<CasaDeBurrito> temp = new HashSet<>(favourites);
         return temp; //TODO Clone
     }
 
@@ -51,13 +51,13 @@ public class ProfesorImpl implements OOP.Provided.Profesor {
     }
 
     public Set<Profesor> getFriends() {
-        Set<Profesor>  temp= new HashSet<>(friends);
+        Set<Profesor> temp = new HashSet<>(friends);
         return temp; //TODO clone
     }
 
 
     public Set<Profesor> filteredFriends(Predicate<Profesor> p) {
-        Set<Profesor>  friendsTemp = new HashSet<>(friends);
+        Set<Profesor> friendsTemp = new HashSet<>(friends);
         Iterator<Profesor> it = friendsTemp.iterator();
         while (it.hasNext()) {
             Profesor prof = it.next();
@@ -71,7 +71,7 @@ public class ProfesorImpl implements OOP.Provided.Profesor {
     }
 
     public Collection<CasaDeBurrito> filterAndSortFavorites(Comparator<CasaDeBurrito> comp, Predicate<CasaDeBurrito> p) {
-        Set<Profesor>  friendsTemp = new HashSet<>(friends);
+        Set<Profesor> friendsTemp = new HashSet<>(friends);
         Iterator<CasaDeBurrito> it = favourites.iterator();
         while (it.hasNext()) {
             CasaDeBurrito casa = it.next();
@@ -88,29 +88,31 @@ public class ProfesorImpl implements OOP.Provided.Profesor {
     }
 
 
-/** Both favourites by-X  methods are sorted using  filter and sort method above**/
+    /**
+     * Both favourites by-X  methods are sorted using  filter and sort method above
+     **/
 
 
-   public Collection<CasaDeBurrito> favoritesByRating(int rLimit){
-        Comparator<CasaDeBurrito> comp_rate_dist_id = Comparator.comparing(CasaDeBurrito::getRatingOf)
+    public Collection<CasaDeBurrito> favoritesByRating(int rLimit) {
+        Comparator<CasaDeBurrito> comp_rate_dist_id = Comparator.comparing(CasaDeBurrito::averageRating)
                 .reversed().thenComparing(CasaDeBurrito::distance).thenComparing(CasaDeBurrito::getId);
 
 
-        return filterAndSortFavorites(comp_rate_dist_id,(c)->c.averageRating()>=rLimit);
+        return filterAndSortFavorites(comp_rate_dist_id, (c) -> c.averageRating() >= rLimit);
     }
 
-    public Collection<CasaDeBurrito> favoritesByDist(int dLimit){
+    public Collection<CasaDeBurrito> favoritesByDist(int dLimit) {
         Comparator<CasaDeBurrito> comp_dist_rate_id = Comparator.comparing(CasaDeBurrito::distance)
-                .thenComparing(CasaDeBurrito::getRatingOf).reversed().thenComparing(CasaDeBurrito::getId);
+                .thenComparing(CasaDeBurrito::averageRating).reversed().thenComparing(CasaDeBurrito::getId);
 
 
-        return filterAndSortFavorites(comp_dist_rate_id,(c)->c.distance()<=dLimit);
+        return filterAndSortFavorites(comp_dist_rate_id, (c) -> c.distance() <= dLimit);
     }
 
     @Override
-    public boolean equals(Object o){
+    public boolean equals(Object o) {
 
-        if(!(o instanceof  Profesor)){
+        if (!(o instanceof Profesor)) {
             return false;
         }
 
@@ -120,8 +122,37 @@ public class ProfesorImpl implements OOP.Provided.Profesor {
 
 
     @Override
-    public int compareTo(Profesor p){
+    public int compareTo(Profesor p) {
         return (this.id - p.getId());
+    }
+
+    @Override
+    public String toString() {
+
+        String toReturn = "\n";
+        toReturn += "Profesor: " + this.name + ".\n";
+        toReturn += "Id: " + this.id + ".\n";
+        toReturn += "Favorites: " + favouriteNames() +".\n";
+        return toReturn;
+    }
+
+
+    public String favouriteNames() {
+
+        List<CasaDeBurrito> sortedList = new ArrayList<>(favourites);
+        Collections.sort(sortedList, Comparator.comparing(CasaDeBurrito::getName));
+        Iterator<CasaDeBurrito> it = sortedList.iterator();
+        String toReturn = "";
+        while (it.hasNext()) {
+            String temp = it.next().getName();
+            if (it.hasNext()) {
+                toReturn += temp + ", ";
+            } else {
+                toReturn += temp;
+            }
+
+        }
+        return toReturn;
     }
 
 

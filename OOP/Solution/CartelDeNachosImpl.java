@@ -1,4 +1,4 @@
-package OOP.Solution1;
+package OOP.Solution;
 
 import OOP.Provided.*;
 //import OOP.Provided.CasaDeBurrito;
@@ -35,7 +35,7 @@ public class CartelDeNachosImpl {
     CasaDeBurrito addCasaDeBurrito(int id, String name, int dist, Set<String> menu)
             throws CasaDeBurrito.CasaDeBurritoAlreadyInSystemException{
 
-         CasaDeBurrito c = new CasaDeBurrito(id,name,dist,menu);
+         CasaDeBurrito c = new CasaDeBurritoImpl(id,name,dist,menu);
 
          if(casaDeBurritoMap.containsKey(id)){
              throw new CasaDeBurrito.CasaDeBurritoAlreadyInSystemException();
@@ -77,11 +77,83 @@ public class CartelDeNachosImpl {
         if (prof1.equals(prof2)) throw new Profesor.SameProfesorException();
 
         if(prof1 == null || prof2 == null) throw new Profesor.ProfesorNotInSystemException();
+        prof1.addFriend(prof2);
+        prof2.addFriend(prof1);
 
+        return (CartelDeNachos) this;
+
+
+    }
+
+    /**
+     * Gets Professor's friends first, sorts them by ID
+     * Gets CasaDeBurritos and sorts them by Rating
+     * Then for each friend, check if the resturant exists in its fav and remove it from the list if it ain't
+     * @param p
+     * @return  sorted and filtered resturants
+     * @throws Profesor.ProfesorNotInSystemException
+     */
+    Collection<CasaDeBurrito> favoritesByRating(Profesor p)
+            throws Profesor.ProfesorNotInSystemException {
+        if(!profesorMap.containsValue(p)) throw new Profesor.ProfesorNotInSystemException();
+        Collection<CasaDeBurrito> filteredSortedBurritos = p.favoritesByRating(0);
+        ArrayList<Profesor> sortedList = new ArrayList<>(p.getFriends());
+
+
+        Collections.sort(sortedList, Comparator.comparing(Profesor::getId));
+        for (Profesor p_1 : sortedList) {
+            for (CasaDeBurrito c_it : filteredSortedBurritos) {  //Might Need to iterate first to find those to remove
+                if (!p_1.favorites().contains(c_it)){
+                    filteredSortedBurritos.remove(c_it);
+                }
+            }
+
+        }
+        return filteredSortedBurritos;
+    }
+
+
+
+    boolean getRecommendation(Profesor p, CasaDeBurrito c, int t)
+            throws Profesor.ProfesorNotInSystemException, CasaDeBurrito.CasaDeBurritoNotInSystemException, CartelDeNachos.ImpossibleConnectionException{
+    if(!profesorMap.containsValue(p)) throw new Profesor.ProfesorNotInSystemException();
+    if(!casaDeBurritoMap.containsValue(c)) throw new CasaDeBurrito.CasaDeBurritoNotInSystemException();
+    if(t<0) throw new CartelDeNachos.ImpossibleConnectionException();
+        ArrayList<Profesor> visited = new ArrayList<>();
+    try {
+        BFS(p,c,t,visited);
+    }catch(Exception e) {
+        return false;
+    }
+        return true;
+    }
+
+
+    public void BFS(Profesor p,CasaDeBurrito c,int t,ArrayList<Profesor> visited) throws CartelDeNachos.ImpossibleConnectionException {
+        if (t <= 0) throw new CartelDeNachos.ImpossibleConnectionException();
+        visited.add(p);
+        if(!visited.contains(p)) {
+            for (Profesor p_it : p.getFriends()) {
+                if (p.favorites().contains(c)) ;
+            }
+            for (Profesor p_it : p.getFriends()) {
+                BFS(p_it, c, t - 1, visited);
+            }
+
+        }
+    }
+
+
+    @Override
+    String toString(){
+        String toReturn = "\n";
+        toReturn+= "Registered profesores: ";
 
 
 
     }
+
+
 
 }
 
