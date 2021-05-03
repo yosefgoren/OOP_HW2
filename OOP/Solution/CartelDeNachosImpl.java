@@ -4,6 +4,7 @@ import OOP.Provided.*;
 //import OOP.Provided.CasaDeBurrito;
 //import OOP.Provided.Profesor;
 import java.util.*;
+import java.util.stream.Stream;
 
 
 public class CartelDeNachosImpl {
@@ -144,15 +145,73 @@ public class CartelDeNachosImpl {
     }
 
 
-    @Override
-    String toString(){
-        String toReturn = "\n";
-        toReturn+= "Registered profesores: ";
+    List<Integer> getMostPopularRestaurantsIds(){
+    Map<CasaDeBurrito,Integer> resturantPoints = new TreeMap<>();
+        for (CasaDeBurrito c:casaDeBurritoMap.values()) {
+            int i=0;
+            for (Profesor p1:profesorMap.values()) {
+                for (Profesor p2:p1.getFriends()){
+                    if(p2.favorites().contains(c)){
+                        i++;
+                    }
+                }//TODO
+            }
+            resturantPoints.put(c,i);
+        }
 
-
-
+    return ;
     }
 
+    @Override
+    String toString() {
+        String toReturn = "\n";
+        toReturn += "Registered profesores: " + Profs() + ".\n";
+        toReturn += "Registered casas de burrito: " + Casas() + ".\n";
+        toReturn += "Profesores:\n";
+        for (Profesor p_it : profesorMap.values()) {
+            toReturn += p_it.getId() + " -> [";
+            for (Profesor p_it2 : p_it.getFriends()) {
+             //TODO
+            }
+
+
+        }
+    }
+    public String Profs() {
+
+        List<Profesor> sortedList = new ArrayList<>(profesorMap.values());
+        Collections.sort(sortedList, Comparator.comparing(Profesor::getId));
+        Iterator<Profesor> it = sortedList.iterator();
+        String toReturn = "";
+        while (it.hasNext()) {
+            int temp = it.next().getId();
+            if (it.hasNext()) {
+                toReturn += temp + ", ";
+            } else {
+                toReturn += temp;
+            }
+
+        }
+        return toReturn;
+    }
+
+    public String Casas() {
+
+        List<CasaDeBurrito> sortedList = new ArrayList<>(casaDeBurritoMap.values());
+        Collections.sort(sortedList, Comparator.comparing(CasaDeBurrito::getId));
+        Iterator<CasaDeBurrito> it = sortedList.iterator();
+        String toReturn = "";
+        while (it.hasNext()) {
+            int temp = it.next().getId();
+            if (it.hasNext()) {
+                toReturn += temp + ", ";
+            } else {
+                toReturn += temp;
+            }
+
+        }
+        return toReturn;
+    }
 
 
 }
