@@ -38,6 +38,9 @@ public class CasaDeBurritoImpl implements OOP.Provided.CasaDeBurrito {
         this.name = name;
         this.dist = dist;
         this.menu = menu;
+
+        menu = new TreeSet<>();
+         ratings = new TreeMap<>();
     }
 
     public int getId() {
@@ -67,6 +70,7 @@ public class CasaDeBurritoImpl implements OOP.Provided.CasaDeBurrito {
 
     public double averageRating() {
         int sum = 0;
+        if(ratings.isEmpty()) return 0;
         for (Rating r : ratings.values()) {
             sum += r.getR();
         }

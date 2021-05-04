@@ -4,10 +4,11 @@ import OOP.Provided.*;
 //import OOP.Provided.CasaDeBurrito;
 //import OOP.Provided.Profesor;
 import java.util.*;
+import java.util.function.Function;
 import java.util.stream.Stream;
 
 
-public class CartelDeNachosImpl {
+public class CartelDeNachosImpl implements CartelDeNachos {
     Map<Integer,Profesor> profesorMap;
     Map<Integer,CasaDeBurrito> casaDeBurritoMap;
 
@@ -18,7 +19,7 @@ public class CartelDeNachosImpl {
     }
 
 
-    Profesor joinCartel(int id, String name)
+    public  Profesor joinCartel(int id, String name)
             throws Profesor.ProfesorAlreadyInSystemException{
 
     Profesor p = new ProfesorImpl(id,name);
@@ -33,7 +34,7 @@ public class CartelDeNachosImpl {
 
     }
 
-    CasaDeBurrito addCasaDeBurrito(int id, String name, int dist, Set<String> menu)
+    public CasaDeBurrito addCasaDeBurrito(int id, String name, int dist, Set<String> menu)
             throws CasaDeBurrito.CasaDeBurritoAlreadyInSystemException{
 
          CasaDeBurrito c = new CasaDeBurritoImpl(id,name,dist,menu);
@@ -47,15 +48,15 @@ public class CartelDeNachosImpl {
          return c;
     }
 
-    Collection<Profesor> registeredProfesores(){
+    public Collection<Profesor> registeredProfesores(){
         return profesorMap.values();
     }
 
-    Collection<CasaDeBurrito> registeredCasasDeBurrito(){
+    public Collection<CasaDeBurrito> registeredCasasDeBurrito(){
        return casaDeBurritoMap.values();
     }
 
-    Profesor getProfesor(int id)
+    public Profesor getProfesor(int id)
             throws Profesor.ProfesorNotInSystemException {
 
         Profesor p = profesorMap.get(id);
@@ -63,7 +64,7 @@ public class CartelDeNachosImpl {
         return p;
     }
 
-    CasaDeBurrito getCasaDeBurrito(int id)
+    public CasaDeBurrito getCasaDeBurrito(int id)
             throws CasaDeBurrito.CasaDeBurritoNotInSystemException{
         CasaDeBurrito c =casaDeBurritoMap.get(id);
         if (c == null) throw new CasaDeBurrito.CasaDeBurritoNotInSystemException();
@@ -71,7 +72,7 @@ public class CartelDeNachosImpl {
 
     }
 
-    CartelDeNachos addConnection(Profesor p1, Profesor p2)
+    public CartelDeNachos addConnection(Profesor p1, Profesor p2)
             throws Profesor.ProfesorNotInSystemException, Profesor.ConnectionAlreadyExistsException, Profesor.SameProfesorException{
         Profesor prof1 = profesorMap.get(p1);
         Profesor prof2 = profesorMap.get(p2);
@@ -94,7 +95,7 @@ public class CartelDeNachosImpl {
      * @return  sorted and filtered resturants
      * @throws Profesor.ProfesorNotInSystemException
      */
-    Collection<CasaDeBurrito> favoritesByRating(Profesor p)
+    public Collection<CasaDeBurrito> favoritesByRating(Profesor p)
             throws Profesor.ProfesorNotInSystemException {
         if(!profesorMap.containsValue(p)) throw new Profesor.ProfesorNotInSystemException();
         Collection<CasaDeBurrito> filteredSortedBurritos = p.favoritesByRating(0);
@@ -113,9 +114,28 @@ public class CartelDeNachosImpl {
         return filteredSortedBurritos;
     }
 
+    public Collection<CasaDeBurrito> favoritesByDist(Profesor p)
+            throws Profesor.ProfesorNotInSystemException{
+        if(!profesorMap.containsValue(p)) throw new Profesor.ProfesorNotInSystemException();
+        Collection<CasaDeBurrito> filteredSortedBurritos = p.favoritesByDist(0);
+        ArrayList<Profesor> sortedList = new ArrayList<>(p.getFriends());
 
 
-    boolean getRecommendation(Profesor p, CasaDeBurrito c, int t)
+        Collections.sort(sortedList, Comparator.comparing(Profesor::getId));
+        for (Profesor p_1 : sortedList) {
+            for (CasaDeBurrito c_it : filteredSortedBurritos) {  //Might Need to iterate first to find those to remove
+                if (!p_1.favorites().contains(c_it)){
+                    filteredSortedBurritos.remove(c_it);
+                }
+            }
+
+        }
+        return filteredSortedBurritos;
+
+    }
+
+
+    public boolean getRecommendation(Profesor p, CasaDeBurrito c, int t)
             throws Profesor.ProfesorNotInSystemException, CasaDeBurrito.CasaDeBurritoNotInSystemException, CartelDeNachos.ImpossibleConnectionException{
     if(!profesorMap.containsValue(p)) throw new Profesor.ProfesorNotInSystemException();
     if(!casaDeBurritoMap.containsValue(c)) throw new CasaDeBurrito.CasaDeBurritoNotInSystemException();
@@ -145,8 +165,8 @@ public class CartelDeNachosImpl {
     }
 
 
-    List<Integer> getMostPopularRestaurantsIds(){
-    Map<CasaDeBurrito,Integer> resturantPoints = new TreeMap<>();
+    public List<Integer> getMostPopularRestaurantsIds(){
+    ArrayList<PairInt> resturantPoints = new ArrayList<>();
         for (CasaDeBurrito c:casaDeBurritoMap.values()) {
             int i=0;
             for (Profesor p1:profesorMap.values()) {
@@ -154,29 +174,47 @@ public class CartelDeNachosImpl {
                     if(p2.favorites().contains(c)){
                         i++;
                     }
-                }//TODO
+                }
             }
-            resturantPoints.put(c,i);
+            resturantPoints.add(new PairInt(i,c.getId()));
+        }
+        Collections.sort(resturantPoints);
+        ArrayList<Integer> toReturn = new ArrayList<>();
+        for (PairInt p:resturantPoints){
+            toReturn.add(p.getSecond());
         }
 
-    return ;
+    return toReturn;
     }
 
     @Override
-    String toString() {
+    public String toString() {
+
+        Function<Pair<Collection<String>, String>, String> cat_all = (pair) ->
+        {
+            Collection<String> collection = pair.getFirst();
+            String spacer = pair.getSecond();
+            String result = "";
+
+            for (String s : collection)
+                result += s + spacer;
+            result = result.substring(0, result.length() - spacer.length());
+            return result;
+        };
+
+
         String toReturn = "\n";
-        toReturn += "Registered profesores: " + Profs() + ".\n";
-        toReturn += "Registered casas de burrito: " + Casas() + ".\n";
+        toReturn += "Registered profesores: " +  cat_all.apply(new Pair(profesorMap,", "))+".\n";
+        toReturn += "Registered casas de burrito: " + cat_all.apply(new Pair(casaDeBurritoMap,", "))+".\n";
         toReturn += "Profesores:\n";
         for (Profesor p_it : profesorMap.values()) {
-            toReturn += p_it.getId() + " -> [";
-            for (Profesor p_it2 : p_it.getFriends()) {
-             //TODO
+            toReturn += p_it.getId() + " -> ["+ cat_all.apply(new Pair(profesorMap,", "))+"].\n";
             }
-
-
+        toReturn+="End profesores\n";
+            return toReturn;
         }
-    }
+
+
     public String Profs() {
 
         List<Profesor> sortedList = new ArrayList<>(profesorMap.values());
@@ -211,6 +249,66 @@ public class CartelDeNachosImpl {
 
         }
         return toReturn;
+    }
+
+    static class PairInt implements Comparable<PairInt> {
+        Integer o1;
+        Integer o2;
+
+        public PairInt(Integer o1, Integer o2) {
+            this.o1 = o1;
+            this.o2 = o2;
+        }
+
+        public Integer getFirst() {
+            return o1;
+        }
+
+        public Integer getSecond() {
+            return o2;
+        }
+
+        public void setFirst(Integer o1) {
+            this.o1 = o1;
+        }
+
+        public void setSecond(Integer o2) {
+            this.o2 = o2;
+        }
+
+        @Override
+        public int compareTo(PairInt p) {
+            if(this.getFirst()!=p.getFirst()){
+                return this.getFirst()-p.getFirst();
+            }
+            return this.getSecond()-p.getSecond();
+        }
+    }
+
+    static class Pair<T1, T2> {
+        T1 o1;
+        T2 o2;
+
+        public Pair(T1 o1, T2 o2) {
+            this.o1 = o1;
+            this.o2 = o2;
+        }
+
+        public T1 getFirst() {
+            return o1;
+        }
+
+        public T2 getSecond() {
+            return o2;
+        }
+
+        public void setFirst(T1 o1) {
+            this.o1 = o1;
+        }
+
+        public void setSecond(T2 o2) {
+            this.o2 = o2;
+        }
     }
 
 

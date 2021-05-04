@@ -71,18 +71,19 @@ public class ProfesorImpl implements OOP.Provided.Profesor {
     }
 
     public Collection<CasaDeBurrito> filterAndSortFavorites(Comparator<CasaDeBurrito> comp, Predicate<CasaDeBurrito> p) {
-        Set<Profesor> friendsTemp = new HashSet<>(friends);
+        Set<CasaDeBurrito> Temp = new HashSet<>(favourites);
         Iterator<CasaDeBurrito> it = favourites.iterator();
         while (it.hasNext()) {
             CasaDeBurrito casa = it.next();
             if (p.test(casa) == false) {
-                favourites.remove(casa);
-
+               Temp.remove(casa);
             }
 
 
+
+
         }
-        List<CasaDeBurrito> sortedList = new ArrayList<>(favourites);
+        List<CasaDeBurrito> sortedList = new ArrayList<>(Temp);
         Collections.sort(sortedList, comp);
         return sortedList;
     }
