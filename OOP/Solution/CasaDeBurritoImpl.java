@@ -2,8 +2,10 @@
 
 package OOP.Solution;
 
+import java.sql.Array;
 import java.util.*;
 import java.util.function.*;
+import java.util.stream.Collectors;
 
 import OOP.Provided.*;
 
@@ -11,7 +13,7 @@ public class CasaDeBurritoImpl implements OOP.Provided.CasaDeBurrito {
     int id;
     String name;
     int dist;
-    Set<String> menu;
+    List<String> menu;
     Map<Profesor, Rating> ratings;
 
     static class Rating {
@@ -37,7 +39,8 @@ public class CasaDeBurritoImpl implements OOP.Provided.CasaDeBurrito {
         this.id = id;
         this.name = name;
         this.dist = dist;
-        this.menu = menu;
+        this.menu = new ArrayList<>();
+        this.menu.addAll(menu);
 
         menu = new TreeSet<>();
          ratings = new TreeMap<>();
@@ -123,7 +126,8 @@ public class CasaDeBurritoImpl implements OOP.Provided.CasaDeBurrito {
             return result;
         };
 
-        Set<String> lines = new HashSet<>(Arrays.asList(
+        Collections.sort(menu);
+        Vector<String> lines = new Vector<>(Arrays.asList(
                 "CasaDeBurrito: " + getName(),
                 "Id: " + getId(),
                 "Distance: " + distance(),

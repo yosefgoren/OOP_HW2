@@ -132,7 +132,8 @@ public class Main {
                 "Distance: 2.\n" +
                 "Menu: Fries, Hamburger.\n";
 
-        Checker.check(s1.toString().equals(toStringOutput));
+        out_res = s1.toString();
+        Checker.check(out_res.equals(toStringOutput));
     }
 
     private static void testPartB() throws Exception {

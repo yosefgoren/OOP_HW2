@@ -203,7 +203,7 @@ public class CartelDeNachosImpl implements CartelDeNachos {
         };
 
 
-        String toReturn = "\n";
+        String toReturn = "";
         toReturn += "Registered profesores: " +  cat_all.apply(new Pair(profesorMap,", "))+".\n";
         toReturn += "Registered casas de burrito: " + cat_all.apply(new Pair(casaDeBurritoMap,", "))+".\n";
         toReturn += "Profesores:\n";
