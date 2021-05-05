@@ -79,7 +79,7 @@ public class CasaDeBurritoImpl implements OOP.Provided.CasaDeBurrito {
 
     @Override
     public boolean equals(Object o) {
-        if (o instanceof CasaDeBurritoImpl)
+        if (!(o instanceof CasaDeBurritoImpl))
             return false;
         return getId() == ((CasaDeBurrito) o).getId();
     }

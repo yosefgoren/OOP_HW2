@@ -1,5 +1,7 @@
 package OOP.Tests;
 
+import static org.junit.jupiter.api.Assertions.*;
+
 import OOP.Provided.*;
 import OOP.Solution.*;
 
@@ -7,7 +9,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 public class Main {
-
+    //@org.junit.jupiter.api.Test
     public static void main(String[] args) throws Exception {
        System.out.println("starting Test A");
         testPartA();
@@ -17,7 +19,7 @@ public class Main {
         System.out.println("partB test was successful");
 
     }
-
+    @org.junit.jupiter.api.Test
     private static void testPartA() throws Exception {
 
         Profesor p1 = new ProfesorImpl(1, "yoni");
@@ -283,8 +285,8 @@ public class Main {
         Checker.check(c.toString().equals(toStringOutput));
 
     }
-    class Checker{
-      static void check(boolean cond) throws Exception{
+    static class Checker{
+      public static void check(boolean cond) throws Exception{
           if(!cond) throw new Exception();
       }
     }

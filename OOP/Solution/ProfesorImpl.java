@@ -3,6 +3,7 @@ package OOP.Solution;
 
 import java.util.*;
 import java.util.function.Predicate;
+import java.util.stream.Collectors;
 
 import OOP.Provided.*;
 
@@ -70,22 +71,24 @@ public class ProfesorImpl implements OOP.Provided.Profesor {
 
     }
 
-    public Collection<CasaDeBurrito> filterAndSortFavorites(Comparator<CasaDeBurrito> comp, Predicate<CasaDeBurrito> p) {
+    public Collection<CasaDeBurrito> filterAndSortFavorites(Comparator<CasaDeBurrito> comp, Predicate<CasaDeBurrito> p){
+        //old code by tomer:
+        /*
         Set<CasaDeBurrito> Temp = new HashSet<>(favourites);
         Iterator<CasaDeBurrito> it = favourites.iterator();
         while (it.hasNext()) {
             CasaDeBurrito casa = it.next();
             if (p.test(casa) == false) {
-               Temp.remove(casa);
+                Temp.remove(casa);
             }
-
-
-
-
         }
         List<CasaDeBurrito> sortedList = new ArrayList<>(Temp);
         Collections.sort(sortedList, comp);
         return sortedList;
+        */
+
+        //new implementation by yosef:
+        return (new ArrayList<>(favourites)).stream().filter(p).sorted(comp).collect(Collectors.toSet());
     }
 
 
