@@ -108,7 +108,9 @@ public class Main {
                 "Id: 1.\n" +
                 "Favorites: cristina aguilera, edd shiren, maluma, michel jackson, omer adam, zak efron.\n";
 
-        Checker.check(p1.toString().equals(toStringOutput));
+        String out_res = p1.toString();
+
+        Checker.check(out_res.equals(toStringOutput));
 
         s1.rate(p2, 3);
         Checker.check(s1.averageRating() == 4);

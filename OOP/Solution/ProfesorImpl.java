@@ -73,7 +73,6 @@ public class ProfesorImpl implements OOP.Provided.Profesor {
 
     public Collection<CasaDeBurrito> filterAndSortFavorites(Comparator<CasaDeBurrito> comp, Predicate<CasaDeBurrito> p){
         //old code by tomer:
-        /*
         Set<CasaDeBurrito> Temp = new HashSet<>(favourites);
         Iterator<CasaDeBurrito> it = favourites.iterator();
         while (it.hasNext()) {
@@ -85,10 +84,10 @@ public class ProfesorImpl implements OOP.Provided.Profesor {
         List<CasaDeBurrito> sortedList = new ArrayList<>(Temp);
         Collections.sort(sortedList, comp);
         return sortedList;
-        */
+
 
         //new implementation by yosef:
-        return (new ArrayList<>(favourites)).stream().filter(p).sorted(comp).collect(Collectors.toSet());
+        //return (new ArrayList<>(favourites)).stream().filter(p).sorted(comp).collect(Collectors.toSet());
     }
 
 
@@ -107,7 +106,7 @@ public class ProfesorImpl implements OOP.Provided.Profesor {
 
     public Collection<CasaDeBurrito> favoritesByDist(int dLimit) {
         Comparator<CasaDeBurrito> comp_dist_rate_id = Comparator.comparing(CasaDeBurrito::distance)
-                .thenComparing(CasaDeBurrito::averageRating).reversed().thenComparing(CasaDeBurrito::getId);
+                .thenComparing(CasaDeBurrito::averageRating, Comparator.reverseOrder()).thenComparing(CasaDeBurrito::getId);
 
 
         return filterAndSortFavorites(comp_dist_rate_id, (c) -> c.distance() <= dLimit);
@@ -133,7 +132,7 @@ public class ProfesorImpl implements OOP.Provided.Profesor {
     @Override
     public String toString() {
 
-        String toReturn = "\n";
+        String toReturn = "";
         toReturn += "Profesor: " + this.name + ".\n";
         toReturn += "Id: " + this.id + ".\n";
         toReturn += "Favorites: " + favouriteNames() +".\n";
